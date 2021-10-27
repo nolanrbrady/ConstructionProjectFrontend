@@ -1,10 +1,13 @@
 import './App.css';
-
+import services from "./service/server.js";
+const { pushChanges } = services;
 
 function App() {
 
+  
   const clickHandler = (item) => {
-    console.log(item);
+    // Send updates to the server
+    pushChanges(item);
   }
 
   const renderLODButtons = () => {
