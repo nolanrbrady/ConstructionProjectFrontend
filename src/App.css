@@ -13,6 +13,17 @@
   }
 }
 
+.Button-container {
+  align-content: space-between;
+  display: inline-flex;
+}
+
+.Button {
+  border-color: red;
+  margin: 1rem 1rem 2rem 1rem;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
