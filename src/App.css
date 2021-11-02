@@ -21,6 +21,14 @@
 .Button {
   border-color: red;
   margin: 1rem 1rem 2rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.ActiveButton {
+  border-color: aqua;
+  margin: 1rem 1rem 2rem 1rem;
+  background-color: tomato;
+  border-radius: 0.5rem;
 }
 
 

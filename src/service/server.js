@@ -4,24 +4,12 @@ const host = inDevelopment ? 'http://localhost:3001' : 'dev server url';
 
 
 const pushChanges = (item) => {
-    console.log("Update Server function firing");
+    console.log("Update Server function firing", item);
+    const { id, type } = item;
+    const data = {id, type};
 
-    // axios.get(host, item)
-    //     .then(res => { console.log(res)})
-    //     .catch(err => console.log("There was an error:", err));
-
-    // const options = {
-    //     method: 'POST',
-    //     body: JSON.stringify(item),
-    //     headers: { 
-    //         'Content-Type': 'application/json',
-    //         'Access-Control-Allow-Origin': 'http://localhost:3001/',
-    //         'Access-Control-Allow-Methods': 'POST',
-    //         'Access-Control-Allow-Headers': 'Content-Type'
-    //     }
-    // }
-
-    axios.put(host, { test: 'hello world' }).catch(err => console.log(err));
+    axios.put(host, data)
+        .catch(err => console.log(err));
 
     return;
 };
