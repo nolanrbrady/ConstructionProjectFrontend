@@ -5,10 +5,8 @@ const host = inDevelopment ? 'http://localhost:3001' : 'dev server url';
 
 const pushChanges = (item) => {
     console.log("Update Server function firing", item);
-    const { id, type } = item;
-    const data = {id, type};
 
-    axios.put(host, data)
+    axios.put(host, item)
         .catch(err => console.log(err));
 
     return;

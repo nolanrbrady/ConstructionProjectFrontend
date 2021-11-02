@@ -17,10 +17,11 @@ class App extends React.Component {
 
     const clickHandler = (item) => {
       // Send updates to the server
-      pushChanges(item);
       const { id, type } = item;
-      console.log(item);
-      this.setState({ [type]: id});
+      this.setState({ [type]: id}, (next) => {
+        const { lod, panel } = this.state;
+        pushChanges({ lod, panel });
+      });
     }
   
     const renderLODButtons = () => {
