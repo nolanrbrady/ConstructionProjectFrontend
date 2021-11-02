@@ -1,14 +1,14 @@
 import axios from 'axios';
 const inDevelopment = true;
-const host = inDevelopment ? 'http://localhost:3001/' : 'dev server url';
+const host = inDevelopment ? 'http://localhost:3001' : 'dev server url';
 
 
 const pushChanges = (item) => {
     console.log("Update Server function firing");
 
-    axios.post(host, item)
-        .then(res => { console.log(res)})
-        .catch(err => console.log("There was an error", err));
+    // axios.get(host, item)
+    //     .then(res => { console.log(res)})
+    //     .catch(err => console.log("There was an error:", err));
 
     // const options = {
     //     method: 'POST',
@@ -21,14 +21,7 @@ const pushChanges = (item) => {
     //     }
     // }
 
-    // fetch(host, options)
-    //     .then(res => {
-    //         if (!res.ok) {
-    //             console.log(res); 
-    //         }
-
-    //     })
-    //     .catch(err => console.log(err));
+    axios.put(host, { test: 'hello world' }).catch(err => console.log(err));
 
     return;
 };
