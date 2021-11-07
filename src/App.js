@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import services from "./service/server.js";
-const { pushChanges } = services;
+const { pushChanges, fetchData } = services;
 
 
 class App extends React.Component {
@@ -13,8 +13,16 @@ class App extends React.Component {
     }
   }
 
-  render () {
+  componentDidMount = async() => {
+    const res = await fetchData();
 
+    const { lod, panel } = res.data;
+
+    this.setState({ lod, panel });
+  }
+
+  render () {
+    
     const clickHandler = (item) => {
       // Send updates to the server
       const { id, type } = item;
