@@ -1,19 +1,29 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
-const inDevelopment = false;
+const inDevelopment = true;
 const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com/';
 
 
 const pushChanges = (item) => {
-    console.log("Update Server function firing", item);
-    console.log("Targeting Development", inDevelopment);
-
-    axios.put(host, item)
+    const { lod, panel } = item;
+    axios.put(host, { lod, panel })
         .catch(err => console.log(err));
+
+    console.log(item);
+    logConfigurationChange({...item, timeChanged: new Date()});
 
     return;
 };
 
+const logConfigurationChange = (item) => {
+    const data = {
+        ...item,
+        currentPanel: item.panel,
+        currentLod: item.lod
+    }
+    axios.put(`${host}/log-config-change`, data)
+        .catch(err => console.log(err));
+}
 
 const fetchData = async (item) => {
 

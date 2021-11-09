@@ -9,7 +9,9 @@ class App extends React.Component {
     super(props);
     this.state = {
       lod: 200, // type int
-      panel: 1 // type int
+      panel: 1, // type int
+      previousLod: null,
+      previousPanel: null
     }
   }
 
@@ -26,9 +28,12 @@ class App extends React.Component {
     const clickHandler = (item) => {
       // Send updates to the server
       const { id, type } = item;
-      this.setState({ [type]: id}, (next) => {
+      const previousLod = this.state.lod;
+      const previousPanel = this.state.panel;
+
+      this.setState({ [type]: id, previousLod, previousPanel}, (next) => {
         const { lod, panel } = this.state;
-        pushChanges({ lod, panel });
+        pushChanges({ lod, panel, previousLod, previousPanel });
       });
     }
   
