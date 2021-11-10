@@ -21,7 +21,7 @@ const logConfigurationChange = (item) => {
         currentPanel: item.panel,
         currentLod: item.lod
     }
-    axios.put(`${host}/log-config-change`, data)
+    axios.put(`${host}/config-change-log`, data)
         .catch(err => console.log(err));
 }
 
