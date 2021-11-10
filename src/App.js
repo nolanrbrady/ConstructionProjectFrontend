@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { handleRecording } from './service/screenCapture';
 import services from "./service/server.js";
 const { pushChanges, fetchData } = services;
 
@@ -11,7 +12,10 @@ class App extends React.Component {
       lod: 200, // type int
       panel: 1, // type int
       previousLod: null,
-      previousPanel: null
+      previousPanel: null,
+      username: 'colinsoguero',
+      password: 'Blewws49',
+      studyInProgress: false,
     }
   }
 
@@ -36,6 +40,38 @@ class App extends React.Component {
         pushChanges({ lod, panel, previousLod, previousPanel });
       });
     }
+
+    const toggleActiveStudy = () => {
+      if(this.state.studyInProgress) return alert("Please use screen capture panel to finish Study");
+      this.setState({ studyInProgress: !this.state.studyInProgress });
+      if (!this.state.studyInProgress) handleRecording();
+    }
+
+    const handleRecording = async () => {
+      try {
+          let stream = await navigator.mediaDevices.getDisplayMedia({
+            video: { mediaSource: "screen" }
+          });
+          const recorder = new MediaRecorder(stream);
+          const chunks = [];
+          recorder.ondataavailable = e => chunks.push(e.data);
+          recorder.start();
+
+          // Event listener for recording to stop
+          recorder.onstop = e => {
+              const completeBlob = new Blob(chunks, { type: chunks[0].type });
+              console.log("Completed Blob", completeBlob);
+              let video = {};
+              video.src = URL.createObjectURL(completeBlob);
+              console.log("Video", video);
+              this.setState({ studyInProgress: false });
+              return video;
+          }
+      } catch (err) {
+          console.log(`Recording failed: ${err}`);
+          return null;
+      }
+  }
   
     const renderLODButtons = () => {
       const lodOptions = [
@@ -79,16 +115,30 @@ class App extends React.Component {
   
     return (
       <div className="App">
-        <header className="App-header">
-          <h1>Select Level of Detail</h1>
-          <h3>{`LOD: ${this.state.lod}, Panel: ${this.state.panel}`}</h3>
-          <div className="Button-container">
-            {renderLODButtons()}
+        <header className="App-body">
+          <div className="App-main">
+            <h1>Select Level of Detail</h1>
+            <h3>{`LOD: ${this.state.lod}, Panel: ${this.state.panel}`}</h3>
+            <div className="Button-container">
+              {renderLODButtons()}
+            </div>
+            <h1>Select Panel</h1>
+            <div className="Button-container">
+              {renderPanelButtons()}
+            </div>
+            <div style={{ paddingTop: '2em' }}>
+              <button 
+              onClick={() => toggleActiveStudy()} 
+              className={this.state.studyInProgress ? "Active-study" : "Inactive-study"}>
+                <h3 style={{ color: 'white' }}>{this.state.studyInProgress ? "End Study" : "Begin Study"}</h3>
+              </button>
+            </div>
           </div>
-          <h1>Select Panel</h1>
-          <div className="Button-container">
-            {renderPanelButtons()}
-          </div>       
+          <div className="Video-container">
+          <video autoPlay controls className="Live-stream">
+            <source type="video/mp4" src={`https://${this.state.username}:${this.state.password}@10.201.58.95//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true`}/>
+          </video>
+        </div>       
         </header>
       </div>
     );
