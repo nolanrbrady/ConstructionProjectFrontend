@@ -1,6 +1,6 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
-const inDevelopment = true;
+const inDevelopment = false;
 const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com/';
 
 
@@ -21,7 +21,8 @@ const logConfigurationChange = (item) => {
         currentPanel: item.panel,
         currentLod: item.lod
     }
-    axios.put(`${host}/config-change-log`, data)
+
+    axios.put(`${host}config-change-log`, data)
         .catch(err => console.log(err));
 }
 
