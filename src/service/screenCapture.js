@@ -29,10 +29,18 @@ const handleRecording = async (isRecording) => {
         recorder.onstop = e => {
             const completeBlob = new Blob(chunks, { type: chunks[0].type });
             console.log("Completed Blob", completeBlob);
-            let video = {};
-            video.src = URL.createObjectURL(completeBlob);
-            console.log("Video", video);
-            return video;
+            
+            const videoUrl = URL.createObjectURL(completeBlob);
+            console.log("Video", videoUrl);
+            // const myFile = new File([completeBlob],"demo.mp4", { type: 'video/mp4' });
+            this.setState ({fileDownloadUrl: videoUrl}, 
+                () => {
+                  this.dofileDownload.click(); 
+                  URL.revokeObjectURL(videoUrl);  // free up storage--no longer needed.
+                  this.setState({fileDownloadUrl: ""})
+              });
+
+            return videoUrl;
         }
         
 

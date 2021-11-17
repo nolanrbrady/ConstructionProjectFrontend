@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import { handleRecording } from './service/screenCapture';
 import services from "./service/server.js";
+const { DateTime } = require('luxon');
 const { pushChanges, fetchData } = services;
 
 
@@ -53,18 +53,35 @@ class App extends React.Component {
             video: { mediaSource: "screen" }
           });
           const recorder = new MediaRecorder(stream);
-          const chunks = [];
-          recorder.ondataavailable = e => chunks.push(e.data);
+          let chunks = [];
+          recorder.ondataavailable = e => {
+            chunks.push(e.data)
+          };
           recorder.start();
-
+        
+          // console.log("Recorder Stream", recorder);
           // Event listener for recording to stop
           recorder.onstop = e => {
+            // console.log("Chunks", chunks)
               const completeBlob = new Blob(chunks, { type: chunks[0].type });
-              console.log("Completed Blob", completeBlob);
+              // console.log("Completed Blob", completeBlob);
               let video = {};
-              video.src = URL.createObjectURL(completeBlob);
-              console.log("Video", video);
+              const url = URL.createObjectURL(completeBlob);
+              // console.log("URL", url);
+              video.url = url;
+              // console.log("Video", video);
               this.setState({ studyInProgress: false });
+              const a = document.createElement("a");
+
+              // Add Props to "a" element
+              a.href = url;
+              a.download = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATE_SHORT)}.webm`;
+
+              // Click Event
+              a.click();
+
+              a.remove();
+              
               return video;
           }
       } catch (err) {

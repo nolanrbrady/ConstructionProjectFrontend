@@ -1,6 +1,6 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
-const inDevelopment = false;
+const inDevelopment = true;
 const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com/';
 
 
