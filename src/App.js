@@ -59,23 +59,22 @@ class App extends React.Component {
           };
           recorder.start();
         
-          // console.log("Recorder Stream", recorder);
           // Event listener for recording to stop
           recorder.onstop = e => {
-            // console.log("Chunks", chunks)
               const completeBlob = new Blob(chunks, { type: chunks[0].type });
-              // console.log("Completed Blob", completeBlob);
               let video = {};
               const url = URL.createObjectURL(completeBlob);
-              // console.log("URL", url);
               video.url = url;
-              // console.log("Video", video);
               this.setState({ studyInProgress: false });
               const a = document.createElement("a");
+              const fileName = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATE_SHORT)}`;
 
+              // Save Video
+              services.saveVideo(fileName, url);
+              
               // Add Props to "a" element
               a.href = url;
-              a.download = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATE_SHORT)}.webm`;
+              a.download = `${fileName}.webm`;
 
               // Click Event
               a.click();
