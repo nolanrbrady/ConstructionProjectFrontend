@@ -1,7 +1,7 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
 const inDevelopment = true;
-const host = inDevelopment ? 'http://localhost:3001/' : 'https://construction-research.herokuapp.com/';
+const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com';
 
 
 const pushChanges = (item) => {
@@ -22,7 +22,7 @@ const logConfigurationChange = (item) => {
         currentLod: item.lod
     }
 
-    axios.put(`${host}config-change-log`, data)
+    axios.put(`${host}/config-change-log`, data)
         .catch(err => console.log(err));
 }
 
@@ -37,7 +37,7 @@ const saveVideo = (fileName, url) => {
     const data = { fileName, url };
     console.log("Data in Save Video", data);
     let error = null;
-    axios.post(`${host}session-recording`, data)
+    axios.post(`${host}/session-recording`, data)
         .catch(err => {
             console.log(err);
             error = err;
@@ -49,6 +49,17 @@ const saveVideo = (fileName, url) => {
     return;
 }
 
-const services = {pushChanges, fetchData, saveVideo};
+const fetchRecordings= async() => {
+    const data = await axios.get(`${host}/session-recording`)
+        .catch(err => console.log(err));
+    return data;
+}
+
+const services = {
+    pushChanges, 
+    fetchData, 
+    saveVideo,
+    fetchRecordings
+};
 
 export default services;

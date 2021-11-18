@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import services from "./service/server.js";
+import { NavigationBar } from './components/NavigationBar';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 const { DateTime } = require('luxon');
 const { pushChanges, fetchData } = services;
 
@@ -71,7 +73,7 @@ class App extends React.Component {
 
               // Save Video
               services.saveVideo(fileName, url);
-              
+
               // Add Props to "a" element
               a.href = url;
               a.download = `${fileName}.webm`;

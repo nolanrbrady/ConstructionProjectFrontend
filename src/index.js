@@ -2,12 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-
+import DataDashboard from './pages/DataDashboard';
+import reportWebVitals from './reportWebVitals'
+import { NavigationBar } from './components/NavigationBar';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <React.Fragment>
+    <Router>
+      <NavigationBar/>
+      <Routes>
+        <Route exact path="/" element={<App/>}/>
+        <Route path="/data" element={<DataDashboard/>}/>
+        <Route component={<App/>}/>
+      </Routes>
+    </Router>
+  </React.Fragment>,
   document.getElementById('root')
 );
 
