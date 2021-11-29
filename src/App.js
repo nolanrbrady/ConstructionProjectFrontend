@@ -81,7 +81,7 @@ class App extends React.Component {
               let video = {};
               const url = URL.createObjectURL(completeBlob);
               video.url = url;
-              const fileName = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATE_SHORT)}`;
+              const fileName = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}`;
               this.setState({ studyInProgress: false });
 
               // Save Video

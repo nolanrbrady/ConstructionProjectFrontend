@@ -22,11 +22,11 @@ class DataDashboard extends React.Component {
             const { fileName, url } = video;
 
             const blob = dataURLtoBlob(url);
-            console.log("Blob", blob)
+            // console.log("Blob", blob)
 
             const downloadURL = URL.createObjectURL(blob);
 
-            console.log("Download URL", downloadURL);
+            // console.log("Download URL", downloadURL);
 
             const a = document.createElement("a");
 
