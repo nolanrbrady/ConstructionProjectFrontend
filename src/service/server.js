@@ -1,6 +1,6 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
-const inDevelopment = true;
+const inDevelopment = false;
 const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com';
 
 
@@ -33,20 +33,33 @@ const fetchData = async (item) => {
     return data;
 }
 
-const saveVideo = (fileName, url) => {
-    const data = { fileName, url };
+const saveVideo = (fileName, blob) => {
+  // convert blob to Base64
+  const a = new FileReader();
+  // a.onload();
+  a.readAsDataURL(blob);
+  // const url = a;
+  // console.log("The fuck does this do?", a.result);
+  let error = null;
+
+  a.addEventListener("load", () => {
+    console.log("a in event listener", a);
+    let dataURL = a.result;
+
+    const data = { fileName, dataURL };
     console.log("Data in Save Video", data);
-    let error = null;
+
     axios.post(`${host}/session-recording`, data)
         .catch(err => {
             console.log(err);
             error = err;
         });
 
-    if (error) alert(`There was an error: ${error}`)
-    else alert("Video uploaded Successfully!")
+    if (error) alert(`There was an error: ${error}`);
+    else alert("Video uploaded Successfully!");
     error = null;
-    return;
+  });
+  return;
 }
 
 const fetchRecordings= async() => {

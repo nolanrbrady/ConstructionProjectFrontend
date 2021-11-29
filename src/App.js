@@ -49,6 +49,20 @@ class App extends React.Component {
       if (!this.state.studyInProgress) handleRecording();
     }
 
+    const downloadVideoLocally = (fileName, video) => {
+      const { url } = video;
+            const a = document.createElement("a");
+            // Add Props to "a" element
+            a.href = url;
+            a.download = `${fileName}.webm`;
+
+            // Click Event
+            a.click();
+
+            a.remove();
+            return;
+    }
+
     const handleRecording = async () => {
       try {
           let stream = await navigator.mediaDevices.getDisplayMedia({
@@ -67,22 +81,14 @@ class App extends React.Component {
               let video = {};
               const url = URL.createObjectURL(completeBlob);
               video.url = url;
-              this.setState({ studyInProgress: false });
-              const a = document.createElement("a");
               const fileName = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATE_SHORT)}`;
+              this.setState({ studyInProgress: false });
 
               // Save Video
-              services.saveVideo(fileName, url);
+              services.saveVideo(fileName, completeBlob);
 
-              // Add Props to "a" element
-              a.href = url;
-              a.download = `${fileName}.webm`;
-
-              // Click Event
-              a.click();
-
-              a.remove();
-              
+              // Save Video Locally
+              // downloadVideoLocally(fileName, video);              
               return video;
           }
       } catch (err) {
