@@ -1,5 +1,6 @@
 import React from "react";
 import services from "../service/server";
+const dataURLtoBlob = require('dataurl-to-blob');
 
 class DataDashboard extends React.Component {
     constructor(props){
@@ -20,11 +21,18 @@ class DataDashboard extends React.Component {
         const downloadVideo = (video) => {
             const { fileName, url } = video;
 
+            const blob = dataURLtoBlob(url);
+            console.log("Blob", blob)
+
+            const downloadURL = URL.createObjectURL(blob);
+
+            console.log("Download URL", downloadURL);
+
             const a = document.createElement("a");
 
               // Add Props to "a" element
-              a.href = url;
-              a.download = fileName
+              a.href = downloadURL;
+              a.download = `${fileName}.webm`
 
               // Click Event
               a.click();
