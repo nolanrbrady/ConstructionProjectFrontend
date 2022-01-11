@@ -74,6 +74,15 @@
   height: 30em;
 }
 
+/* Data Screen */
+
+.Spinner-container {
+  height: 25rem;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

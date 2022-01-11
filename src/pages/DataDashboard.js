@@ -1,5 +1,7 @@
 import React from "react";
 import services from "../service/server";
+import '../App.css';
+import Spinner from 'react-bootstrap/Spinner';
 const dataURLtoBlob = require('dataurl-to-blob');
 
 class DataDashboard extends React.Component {
@@ -7,13 +9,22 @@ class DataDashboard extends React.Component {
         super(props);
         this.state = {
             recordings: [],
+            loading: false,
+            error: null,
         }
     }
 
     componentDidMount = async () => {
-        const res = await services.fetchRecordings();
-        console.log(res);
-        if (res.data) this.setState({ recordings: res.data });
+        this.setState({ loading: true }, async () => {
+            const res = await services.fetchRecordings();
+            console.log(res);
+            
+            // Handle errors from server
+            res.status === 200 ? this.setState({ error: false}) : this.setState({ error: res.statusText})
+
+            if (res.data) this.setState({ recordings: res.data, loading: false });
+            else return;
+        });
     }
 
     render() {
@@ -41,7 +52,16 @@ class DataDashboard extends React.Component {
         }
 
         const renderRecordings = () => {
-            if(!this.state.recordings.length) {
+            if(this.state.loading) {
+                return (
+                    <div className="Spinner-container">
+                        <Spinner animation="border" />
+                        <h3>Loading Videos. This may take several minutes. Thank you</h3>
+                    </div>
+                )
+            } else if (this.state.error) {
+                return <h3>{this.state.error}</h3>
+            } else if(!this.state.recordings.length) {
                 return <h3>No Recordings to Display</h3>
             } else {
                 console.log(this.state.recordings);

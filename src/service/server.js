@@ -1,6 +1,6 @@
 import axios from 'axios';
 // Use this to change the server that the API request is targeting.
-const inDevelopment = true;
+const inDevelopment = false;
 const host = inDevelopment ? 'http://localhost:3001' : 'https://construction-research.herokuapp.com';
 
 
@@ -33,7 +33,7 @@ const fetchData = async (item) => {
     return data;
 }
 
-const saveVideo = (fileName, blob) => {
+const saveVideo = (fileName, blob, video) => {
   // convert blob to Base64
   const a = new FileReader();
   a.readAsDataURL(blob);
@@ -50,11 +50,31 @@ const saveVideo = (fileName, blob) => {
             error = err;
         });
 
-    if (error) alert(`There was an error: ${error}`);
-    else alert("Video uploaded Successfully!");
+    if (error) {
+        alert(`There was an error: ${error}. Local Download Starting`);
+        downloadVideoLocally(fileName, video);
+    } else alert("Video uploaded Successfully!");
+
     error = null;
   });
+
   return;
+}
+
+
+// Back up download incase the server goes down or something
+const downloadVideoLocally = (fileName, video) => {
+    const { url } = video;
+    const a = document.createElement("a");
+    // Add Props to "a" element
+    a.href = url;
+    a.download = `${fileName}.webm`;
+
+    // Click Event
+    a.click();
+
+    a.remove();
+    return;
 }
 
 const fetchRecordings= async() => {
