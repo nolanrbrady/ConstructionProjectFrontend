@@ -2,6 +2,7 @@ import React from "react";
 import services from "../service/server";
 import '../App.css';
 import Spinner from 'react-bootstrap/Spinner';
+const R = require('ramda');
 const dataURLtoBlob = require('dataurl-to-blob');
 
 class DataDashboard extends React.Component {
@@ -22,7 +23,7 @@ class DataDashboard extends React.Component {
             // Handle errors from server
             res.status === 200 ? this.setState({ error: false}) : this.setState({ error: res.statusText})
 
-            if (res.data) this.setState({ recordings: res.data, loading: false });
+            if (res.data) this.setState({ recordings: R.reverse(res.data), loading: false });
             else return;
         });
     }
@@ -33,11 +34,8 @@ class DataDashboard extends React.Component {
             const { fileName, url } = video;
 
             const blob = dataURLtoBlob(url);
-            // console.log("Blob", blob)
 
             const downloadURL = URL.createObjectURL(blob);
-
-            // console.log("Download URL", downloadURL);
 
             const a = document.createElement("a");
 
