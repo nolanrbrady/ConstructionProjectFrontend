@@ -33,27 +33,30 @@ const fetchData = async (item) => {
     return data;
 }
 
-const saveVideo = (fileName, blob, video) => {
+const saveVideo = (fileName, rawBlob, video) => {
+    // console.log({ rawBlob, video });
   // convert blob to Base64
   const a = new FileReader();
-  a.readAsDataURL(blob);
+  a.readAsDataURL(rawBlob);
   let error = null;
 
   a.addEventListener("load", () => {
-    let url = a.result;
+    let blob = a.result;
+    console.log("Blob in saveVideo", blob);
+    const data = { fileName, blob };
 
-    const data = { fileName, url };
+    // axios.post(`${host}/session-recording`, data)
+    //     .catch(err => {
+    //         console.log(err);
+    //         error = err;
+    //     });
 
-    axios.post(`${host}/session-recording`, data)
-        .catch(err => {
-            console.log(err);
-            error = err;
-        });
+        downloadVideoLocally(fileName, video);
 
     if (error) {
         alert(`There was an error: ${error}. Local Download Starting`);
         downloadVideoLocally(fileName, video);
-    } else alert("Video uploaded Successfully!");
+    } else alert("Video Downloaded Successfully!");
 
     error = null;
   });
