@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
 import services from "./service/server.js";
-const { DateTime } = require('luxon');
+const { DateTime, Interval } = require('luxon');
 const { pushChanges, fetchData } = services;
+
 
 
 class App extends React.Component {
@@ -13,9 +14,14 @@ class App extends React.Component {
       panel: 1, // type int
       previousLod: null,
       previousPanel: null,
+      elapsedSeconds: "00",
+      elapsedMinutes: "00",
+      elapsedHours: "00",
+      startTime: null,
       username: 'colinsoguero',
       password: 'Blewws49',
       studyInProgress: false,
+      interval: null,
     }
   }
 
@@ -24,7 +30,7 @@ class App extends React.Component {
 
     const { lod, panel } = res.data;
 
-    this.setState({ lod, panel });
+    this.setState({ lod, panel, startTime: DateTime.now().toISO() });
   }
 
   render () {
@@ -42,9 +48,23 @@ class App extends React.Component {
     }
 
     const toggleActiveStudy = () => {
-      if(this.state.studyInProgress) return alert("Please use screen capture panel to finish Study");
+      if(this.state.studyInProgress) {
+
+        return alert("Please use screen capture panel to finish Study");
+      }
       this.setState({ studyInProgress: !this.state.studyInProgress });
-      if (!this.state.studyInProgress) handleRecording();
+      if (!this.state.studyInProgress) {
+        //Start the Timer
+        const startTime = DateTime.now().toISO();
+        this.setState({ startTime });
+
+        // Start the Timer
+        handleTimer("START");
+
+        // Start the Recording
+        handleRecording();
+      }
+  
     }
 
 
@@ -63,11 +83,21 @@ class App extends React.Component {
           // Event listener for recording to stop
           recorder.onstop = e => {
               const completeBlob = new Blob(chunks, { type: chunks[0].type });
+              // console.log({completeBlob});
               let video = {};
               const url = URL.createObjectURL(completeBlob);
               video.url = url;
               const fileName = `sessionRecording_${DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}`;
-              this.setState({ studyInProgress: false });
+              this.setState({ 
+                studyInProgress: false, 
+                startTime: null, 
+                elapsedSeconds: "00", 
+                elapsedMinutes: "00", 
+                elapsedHours: "00" 
+              });
+
+              // End the timer
+              handleTimer("END");
 
               // Save Video
               services.saveVideo(fileName, completeBlob, video);
@@ -75,7 +105,7 @@ class App extends React.Component {
 
               // // Save Video Locally
               // if (err) {
-              //   downloadVideoLocally(fileName, video);              
+                // downloadVideoLocally(fileName, video);              
               // }
               return video;
           }
@@ -104,6 +134,38 @@ class App extends React.Component {
         )
       });
     };
+
+    const handleTimer = (action) => {
+      // action --> "START" || "END"
+      // This is all VERY ugly...sorry.
+      
+      if (action === 'START') {
+        const interval = setInterval(() => {
+          const currentTime = DateTime.now();
+          const startTime = DateTime.fromISO(this.state.startTime);
+          const diff = currentTime.diff(startTime, ["hours", "minutes", "seconds"]).toObject();
+      
+          const sec = Math.trunc(diff.seconds);
+          const min = Math.trunc(diff.minutes)
+          const hrs = Math.trunc(diff.hours);
+          this.setState({
+            elapsedSeconds: sec < 10 ? `0${sec}` : `${sec}`,
+            elapsedMinutes: min < 10 ? `0${min}` : `${min}`,
+            elapsedHours: hrs < 10 ? `0${hrs}` : `${hrs}`,
+            interval,
+          });
+        }, 1000);
+      }
+      else {
+        clearInterval(this.state.interval);
+
+        this.setState({
+          elapsedSeconds: "00", 
+          elapsedMinutes: "00", 
+          elapsedHours: "00" 
+        });
+      }
+    }
   
     const renderPanelButtons = () => {
       const panelOptions = [
@@ -124,11 +186,18 @@ class App extends React.Component {
       
       
     }
+
+    // This is the documentation for the hololens casting functionality.
+    // https://blog.kloud.com.au/2016/09/01/streaming-hololens-video-to-your-web-browser/
   
     return (
       <div className="App">
         <header className="App-body">
           <div className="App-main">
+          <div style={{ padding: '2rem' }}>
+            <h1>Elapsed Time</h1>
+            <h2>{`${this.state.elapsedHours}:${this.state.elapsedMinutes}:${this.state.elapsedSeconds}`}</h2>
+          </div>
             <h1>Select Level of Detail</h1>
             <h3>{`LOD: ${this.state.lod}, Panel: ${this.state.panel}`}</h3>
             <div className="Button-container">
