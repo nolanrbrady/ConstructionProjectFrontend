@@ -219,6 +219,9 @@ class App extends React.Component {
           <video autoPlay controls className="Live-stream">
             <source type="video/mp4" src={`https://${this.state.username}:${this.state.password}@10.201.58.95//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true`}/>
           </video>
+          <a href="https://colinsoguero:Blewws49@10.201.58.95//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true" target="_blank">
+          Click to Activate Video
+          </a>
         </div>       
         </header>
       </div>
