@@ -169,9 +169,10 @@ class App extends React.Component {
   
     const renderPanelButtons = () => {
       const panelOptions = [
+        { name: 'Practice Panel', id: 4, type: 'panel'},
         {name: 'Panel 1', id: 1, type: 'panel'}, 
         { name: 'Panel 2', id: 2, type: 'panel'},
-        { name: 'Panel 3', id: 3, type: 'panel'},
+        { name: 'Panel 3', id: 3, type: 'panel'}
       ];
   
       return panelOptions.map(item => {
