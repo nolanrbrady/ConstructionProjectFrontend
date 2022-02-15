@@ -71,8 +71,10 @@ class App extends React.Component {
     const handleRecording = async () => {
       try {
           let stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: "screen" }
+            audio: true,
+            video: true
           });
+          // video: { mediaSource: "screen" }
           const recorder = new MediaRecorder(stream);
           let chunks = [];
           recorder.ondataavailable = e => {
