@@ -22,6 +22,7 @@ class App extends React.Component {
       password: 'Blewws49',
       studyInProgress: false,
       interval: null,
+      ipAdress: "10.201.56.144",
     }
   }
 
@@ -119,8 +120,8 @@ class App extends React.Component {
   
     const renderLODButtons = () => {
       const lodOptions = [
-          {name: "LOD 200", id: 200, type: 'lod'},
-          {name: 'LOD 300', id: 300, type: 'lod'}
+          {name: "LOD 300", id: 200, type: 'lod'},
+          {name: 'LOD 400', id: 300, type: 'lod'}
         ];
 
       return lodOptions.map((item) => {
@@ -167,6 +168,16 @@ class App extends React.Component {
           elapsedHours: "00" 
         });
       }
+    }
+
+
+    // const updateIpAddress = (newIp) => {
+    //   console.log(newIP);
+    //   this.setState({ ipAdress: newIP});
+    // }
+
+    const handleInput = event => {
+      console.log(event)
     }
   
     const renderPanelButtons = () => {
@@ -222,9 +233,15 @@ class App extends React.Component {
           <video autoPlay controls className="Live-stream">
             <source type="video/mp4" src={`https://${this.state.username}:${this.state.password}@10.201.58.95//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true`}/>
           </video>
-          <a href="https://colinsoguero:Blewws49@10.201.58.95//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true" target="_blank">
-          Click to Activate Video
+          <form onSubmit={this.handleSubmit}>
+        <label>
+          <input type="text" value={this.state.ipAdress} onChange={(e) => this.setState({ipAdress: e.target.value})}/>
+        </label>
+      </form>
+          <a href={`https://colinsoguero:Blewws49@${this.state.ipAdress}//api/holographic/stream/live_high.mp4?holo=true&pv=true&mic=true&loopback=true`} target="_blank">
+            Set IP Address and Press Here to Activate Video
           </a>
+          <h4 style={{color: 'white'}}>Hololens 2: 10.201.2.213</h4>
         </div>       
         </header>
       </div>
